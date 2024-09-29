@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* includes the padding and border in the width and height of the elements */
+  }
+
+
+
+body{
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(255, 255, 255);
+    background-image: url('pic.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#myTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+}
+
+#myTable tr:nth-child(even) {
+    background-color: rgba(177, 177, 177, 0.214);
+}
+
+#myTable th{
+    padding: 20px 20px 20px 20px;
+}
+
+#myTable td{
+    padding: 10px 5px;
+}
+
+.td-sentences{
+    overflow: scroll;
+}
+
+.myButton{
+    cursor: pointer;
+    
+}
+
+#sort-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px;
+}
+
+.sort-box-independent{
+    padding: 10px;
+}
+
+.sort-SNO, .sort-RATING, .sort-SOURCE, .sort-TARGET{
+    cursor: pointer;
+}
+
+
+.rating-value{
+    
+    border-radius: 15px;
+    border-style: hidden;
+    background-color: rgb(126, 62, 186);
+    text-align: center;
+    font-weight: strong;
+    color: white;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-left: 10px;
+}
+
+input[type="range"] {
+    -webkit-appearance: none; /* Remove default styles for WebKit-based browsers */
+    -moz-appearance: none; /* Remove default styles for Mozilla-based browsers */
+    appearance: none; /* Remove default styles for other browsers */
+    background-color: rgb(189, 0, 189); /* Set the background color of the slider */
+    height: 9px; /* Set the height of the slider */
+    border-radius: 5px; /* Set the border radius of the slider */
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styles for WebKit-based browsers */
+    appearance: none; /* Remove default styles for other browsers */
+    background-color: rgba(221, 54, 196, 0.841); /* Set the background color of the thumb */
+    border-radius: 50%; /* Make the thumb a circle */
+    width: 13px; /* Set the width of the thumb */
+    height: 13px; /* Set the height of the thumb */
+    box-shadow: 0 0 2px 1px rgb(255, 0, 208); /* Add a box shadow to the thumb */
+    border: solid rgb(255, 255, 255);
+}
+
+.myButton{
+    background-color: blueviolet;
+}
+
+.formheading{
+    text-align: center;
+    color: white;
+    background-color: blueviolet;
+    padding: 10px;
+    width: 100%;
+
+}
+
+form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #d3fffe;
+    border-radius: 5px;
+    margin-top: 80px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #9239e0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
