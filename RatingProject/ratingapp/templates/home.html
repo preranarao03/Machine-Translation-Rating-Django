@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@160..700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Translation Website</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            position: relative;
+            font-family: "Readex Pro", sans-serif;
+
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: -50;
+            z-index: -1;
+        }
+
+        .content {
+            position: absolute;
+            left: 50%;
+            margin-top: 110px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #9239e0;
+            animation: fadeInUp 1s ease;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .button {
+            background-color: #9239e0;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .button:hover {
+            animation: glow 1s ease infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                background-color: #fff700;
+                box-shadow: 0 0 10px #fff700;;
+            }
+
+            100% {
+                background-color: #7c2cba;
+                box-shadow: 0 0 20px #00bfff;;
+            }
+        }
+
+        .button:hover {
+            background-color: #7c2cba;
+        }
+
+        .info-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 160px;
+            height: fit;
+            margin: 30px auto;
+            padding: 270px 20px 20px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            animation: fadeInUp 1s ease;
+
+        }
+
+        .hello {
+            width: 50%;
+            text-align: center;
+        }
+
+        .info-container h3 {
+            color: #9239e0;
+            font-size: 2em;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .info-container p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+
+    <div class="content">
+        <h1>Welcome to the Machine Translator Rating App</h1>
+        <p>Please choose an option below to proceed.</p>
+        <div class="button-container">
+            <a href="{% url 'loginpage' %}" class="button">Login</a>
+            <a href="{% url 'signuppage' %}" class="button">Sign Up</a>
+        </div>
+    </div>
+
+    <div class="info-container">
+        <div class="hello">
+            <h3>COMET</h3>
+            <p>Crosslingual Optimized Metric for Evaluation of Translation (COMET) is an open-source framework for MT evaluation that can be used for two purposes:</p>
+            <ol type="1" style="text-align: left;">
+                <li>To evaluate MT systems with our currently available high-performing metrics.</li>
+                <li>To train and develop new metrics.</li>
+            </ol>
+        </div>
+        <div class="hello">
+            <h3>BLEU Score</h3>
+            <p>BiLingual Evaluation Understudy (BLEU) is a metric for automatically evaluating machine-translated text. The BLEU score is a number between zero and one that measures the similarity of the machine-translated text to a set of high-quality reference translations.</p>
+            <p>A language expert can provide a more nuanced and comprehensive evaluation of machine-translated text compared to automatic metrics like BLEU Score and COMET.</p>
+            <p>A language expert can assess the semantic accuracy, grammatical correctness, contextual understanding, idiomatic expressions, and fluency of the translated sentence with greater expertise.</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // Set up the scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create a torus knot
+        const geometry = new THREE.TorusKnotGeometry(1, 0.4, 64, 16);
+        const material = new THREE.MeshNormalMaterial();
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        camera.position.z = 13;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            torusKnot.rotation.x += 0.01;
+            torusKnot.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+
+</html>

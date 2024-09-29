@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static '../static/style.css' %}">
+
+</head>
+<body>
+    
+    <form action="" method = 'post'>
+        {% csrf_token %}
+        <h2 class = "formheading">Sign Up</h2><br><br>
+        <label for="">Username</label> 
+        <input type="text" placeholder="Enter you username" name = "username" required class = "formfield">
+        <br><br>
+        <label for="">Email</label> 
+        <input type="email" placeholder="Enter you email id" name = "email" required class = "formfield">
+        <br><br>
+        <label for="">Password</label> 
+        <input type="password" placeholder="Enter you Password" name = "password1" required class = "formfield">
+        <br><br>
+        <label for="">Confirm Password</label> 
+        <input type="password" placeholder="Enter you Password again" name = "password2" required class = "formfield">
+        <br><br>
+        <button type="submit">Submit</button><br>
+        {% if error %}
+    <p style = "color: red; text-align: center; margin: 10px;">{{ error }}</p>
+{% endif %}
+            
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Translator Rating</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #222;
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background-color: #333;
+            cursor: pointer;
+        }
+        #add-sentence-button{
+            background-color: rgb(8, 61, 129);
+        }
+        .myButton {
+            background-color: #9239e0;
+            width: fit;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .myButton.disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        #logout-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999; 
+            
+        }
+        .logoutButton {
+            background-color: #c93b3b;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: -10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;          
+            transition: background-color 0.3s;
+        }
+        .logoutButton:hover {
+            background-color: #a52c2c;
+        }
+
+        #submitid{
+            background-color: #c93b3b;
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="welcome-user">
+        {% if request.user.is_authenticated %}
+            <p>Welcome, {{ request.user.username }}</p>
+        {% endif %}
+    </div>
+    <div id="logout-container">
+        <form method="POST" action="{% url 'logout' %}" class="logoutButton">
+            {% csrf_token %}
+            <input type="submit" value="Logout" id = "submitid">
+        </form>
+    </div>
+
+     <table>
+        <tr>
+            <th class="sort-SNO">S.No.</th>
+            <th class="sort-SOURCE">Source Sentence in Hindi</th>
+            <th class="sort-TARGET">Target Sentence in Telugu</th>
+            <th class="sort-RATING">Rating</th>
+            {% if request.user.is_authenticated and request.user.is_staff %}
+                <th>User</th>
+            {% endif %}
+        </tr>
+        <tbody id="tablebody">
+            {% for sentence in sentences %}
+            <tr>
+                <td class="sno">{{ sentence.sno }}</td>
+                <td class="td-sentences">{{ sentence.source }}</td>
+                <td class="td-sentences">{{ sentence.target }}</td>
+                <td class="td-sentences">{{ sentence.rating }}</td>
+                {% if request.user.is_authenticated and request.user.is_staff %}
+                    <td>{{ sentence.user.username }}</td>
+                {% else %}
+                    <td>
+                        <form id="ratingForm{{ sentence.sno }}" method="POST" action="{% url 'save_rating' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="sno" value="{{ sentence.sno }}">
+                            <input type="range" class="rating" name="rating" min="0" max="100">
+                            <span class="rating-value">{{ sentence.rating }}</span>
+                            <input type="submit" class="myButton disabled" value="Save">
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if is_admin %}
+    <div style="display: flex; justify-content: center; align-items: center; ">
+        <a href="{% url 'add_sentence' %}" id="add-sentence-button" class="myButton">Add Sentence</a>
+    </div>
+    {% endif %}
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.rating').forEach(function(input) {
+                let form = input.closest('form');
+                let ratingValue = form.querySelector('.rating-value');
+                let initialRating = parseInt(ratingValue.textContent);
+                input.value = initialRating;
+
+                input.addEventListener('input', function() {
+                    ratingValue.textContent = this.value;
+                    let saveButton = form.querySelector('.myButton');
+                    if (this.value !== initialRating.toString()) {
+                        saveButton.classList.remove('disabled');
+                    } else {
+                        saveButton.classList.add('disabled');
+                    }
+                });
+            });
+        });
+
+        // Sorting functions
+        function sortTable(columnIndex, order) {
+            let table, rows, switching, i, x, y, shouldSwitch;
+            table = document.querySelector('table');
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = columnIndex === 3 ? parseInt(rows[i].getElementsByTagName("td")[columnIndex].textContent) : rows[i].getElementsByTagName("td")[columnIndex].textContent;
+                    y = columnIndex === 3 ? parseInt(rows[i + 1].getElementsByTagName("td")[columnIndex].textContent) : rows[i + 1].getElementsByTagName("td")[columnIndex].textContent;
+                    if ((order === 'asc' && x > y) || (order === 'desc' && x < y)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+
+        let sortCounters = { 'SNO': 0, 'SOURCE': 0, 'TARGET': 0, 'RATING': 0 };
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('sort-SNO')) {
+                sortTable(0, sortCounters['SNO'] % 2 === 0 ? 'asc' : 'desc');
+                sortCounters['SNO']++;
+            } else if (event.target.classList.contains('sort-SOURCE')) {
+                sortTable(1, sortCounters['SOURCE'] % 2 === 0 ? 'asc' : 'desc');
+                sortCounters['SOURCE']++;
+            } else if (event.target.classList.contains('sort-TARGET')) {
+                sortTable(2, sortCounters['TARGET'] % 2 === 0 ? 'asc' : 'desc');
+                sortCounters['TARGET']++;
+            } else if (event.target.classList.contains('sort-RATING')) {
+                sortTable(3, sortCounters['RATING'] % 2 === 0 ? 'asc' : 'desc');
+                sortCounters['RATING']++;
+            }
+        });
+    </script>
+</body>
+</html>
